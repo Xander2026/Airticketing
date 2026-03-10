@@ -30,10 +30,10 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    'amadeus' => [
+ 'amadeus' => [
     'key' => env('AMADEUS_API_KEY'),
     'secret' => env('AMADEUS_API_SECRET'),
-    'url' => env('AMADEUS_API_URL'),
+    'url' => env('AMADEUS_BASE_URL'),
 ],
 
 ];

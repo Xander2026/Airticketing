@@ -4,7 +4,6 @@
 
 <!-- HERO -->
 <section class="bg-primary text-white py-24">
-
 <div class="max-w-7xl mx-auto text-center px-6">
 
 <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
@@ -18,13 +17,10 @@ Compare hundreds of airlines and book the best flight deals worldwide.
 @include('components.flight-search')
 
 </div>
-
 </section>
 
 
-
 <!-- POPULAR DESTINATIONS -->
-
 <section class="py-20 bg-gray-50">
 
 <div class="max-w-7xl mx-auto px-6">
@@ -40,10 +36,16 @@ Popular Destinations
 @foreach($destinations as $destination)
 
 @php
-$code = $destination['destination'];
+$code = strtoupper($destination['destination']);
 $image = destinationImage($code);
 $price = $destination['price']['total'] ?? '--';
+
+/* DEBUG */
+$debugImage = $image ?? 'NULL';
 @endphp
+
+<!-- DEBUG COMMENT -->
+<!-- Destination: {{ $code }} | Image: {{ $debugImage }} -->
 
 <div class="bg-white rounded-xl shadow hover:shadow-2xl transition overflow-hidden group">
 
@@ -53,14 +55,22 @@ $price = $destination['price']['total'] ?? '--';
 src="{{ $image }}"
 alt="{{ $code }}"
 loading="lazy"
+class="w-full h-48 object-cover group-hover:scale-105 transition duration-500"
 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80';"
-class="w-full h-48 object-cover group-hover:scale-105 transition duration-500">
+>
 
 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
 
 <div class="absolute bottom-4 left-4 text-white font-bold text-lg">
 {{ $code }}
 </div>
+
+{{-- DEBUG BADGE --}}
+@if(config('app.debug'))
+<div class="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+{{ $code }}
+</div>
+@endif
 
 </div>
 
@@ -97,7 +107,6 @@ Destinations will appear here once flight data is available.
 
 
 <!-- FLIGHT DEALS -->
-
 <section class="py-20">
 
 <div class="max-w-7xl mx-auto px-6">
@@ -111,7 +120,7 @@ Today's Flight Deals
 @foreach(array_slice($destinations,0,3) as $deal)
 
 @php
-$code = $deal['destination'];
+$code = strtoupper($deal['destination']);
 $image = destinationImage($code);
 $price = $deal['price']['total'] ?? '--';
 @endphp
@@ -122,8 +131,9 @@ $price = $deal['price']['total'] ?? '--';
 src="{{ $image }}"
 alt="{{ $code }}"
 loading="lazy"
+class="w-full h-40 object-cover"
 onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80';"
-class="w-full h-40 object-cover">
+>
 
 <div class="p-6">
 
@@ -162,7 +172,6 @@ View Deal
 
 
 <!-- WHY BOOK WITH US -->
-
 <section class="bg-gray-100 py-24">
 
 <div class="max-w-7xl mx-auto px-6 text-center">
@@ -174,47 +183,27 @@ Why Book With Us
 <div class="grid md:grid-cols-3 gap-12">
 
 <div>
-
 <div class="text-accent text-5xl mb-4">✈</div>
-
-<h3 class="font-bold text-lg mb-2">
-Best Price Guarantee
-</h3>
-
+<h3 class="font-bold text-lg mb-2">Best Price Guarantee</h3>
 <p class="text-gray-500">
 We compare hundreds of airlines to find the cheapest flights.
 </p>
-
 </div>
 
-
 <div>
-
 <div class="text-accent text-5xl mb-4">⚡</div>
-
-<h3 class="font-bold text-lg mb-2">
-Instant Booking
-</h3>
-
+<h3 class="font-bold text-lg mb-2">Instant Booking</h3>
 <p class="text-gray-500">
 Book flights instantly with fast and secure checkout.
 </p>
-
 </div>
 
-
 <div>
-
 <div class="text-accent text-5xl mb-4">🛡</div>
-
-<h3 class="font-bold text-lg mb-2">
-Secure Platform
-</h3>
-
+<h3 class="font-bold text-lg mb-2">Secure Platform</h3>
 <p class="text-gray-500">
 Your payments and personal data are fully protected.
 </p>
-
 </div>
 
 </div>
@@ -226,7 +215,6 @@ Your payments and personal data are fully protected.
 
 
 <!-- AIRLINE PARTNERS -->
-
 <section class="py-20">
 
 <div class="max-w-7xl mx-auto text-center px-6">

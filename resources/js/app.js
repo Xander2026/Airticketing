@@ -1,4 +1,4 @@
-import './bootstrap';
+import './bootstrap'
 
 /*
 |--------------------------------------------------------------------------
@@ -7,21 +7,20 @@ import './bootstrap';
 */
 
 document.addEventListener("DOMContentLoaded", () => {
-    FlightSearch.init();
-});
-
+    FlightSearch.init()
+})
 
 const FlightSearch = {
 
-    state: {
-        passengers: {
-            adult: 1,
-            child: 0,
-            infant: 0
-        },
-        activeDropdown: null,
-        selectedIndex: -1
+state:{
+    passengers:{
+        adult:1,
+        child:0,
+        infant:0
     },
+    activeDropdown:null,
+    selectedIndex:-1
+},
 
 
 /*
@@ -30,16 +29,16 @@ const FlightSearch = {
 |--------------------------------------------------------------------------
 */
 
-init() {
+init(){
 
-    this.initSwapAirports();
-    this.initTripTypeLogic();
-    this.initAirportAutocomplete();
-    this.initPassengerSelector();
-    this.initClickOutside();
+    this.initSwapAirports()
+    this.initTripTypeLogic()
+    this.initAirportAutocomplete()
+    this.initPassengerSelector()
+    this.initClickOutside()
+    this.updatePassengerUI()
 
 },
-
 
 
 /*
@@ -48,32 +47,36 @@ init() {
 |--------------------------------------------------------------------------
 */
 
-initSwapAirports() {
+initSwapAirports(){
 
-    const btn = document.getElementById("swapAirports");
+    const btn=document.getElementById("swapAirports")
+    if(!btn) return
 
-    if (!btn) return;
+    btn.addEventListener("click",()=>{
 
-    btn.addEventListener("click", () => {
+        const originDisplay=document.querySelector('[name="origin_display"]')
+        const destDisplay=document.querySelector('[name="destination_display"]')
 
-        const originDisplay = document.querySelector('[name="origin_display"]');
-        const destinationDisplay = document.querySelector('[name="destination_display"]');
+        const origin=document.querySelector('[name="origin"]')
+        const dest=document.querySelector('[name="destination"]')
 
-        const origin = document.querySelector('[name="origin"]');
-        const destination = document.querySelector('[name="destination"]');
+        if(!originDisplay || !destDisplay) return
 
-        if (!originDisplay || !destinationDisplay) return;
+        ;[originDisplay.value,destDisplay.value]=[
+            destDisplay.value,
+            originDisplay.value
+        ]
 
-        [originDisplay.value, destinationDisplay.value] =
-        [destinationDisplay.value, originDisplay.value];
+        if(origin && dest){
+            ;[origin.value,dest.value]=[
+                dest.value,
+                origin.value
+            ]
+        }
 
-        [origin.value, destination.value] =
-        [destination.value, origin.value];
-
-    });
+    })
 
 },
-
 
 
 /*
@@ -82,29 +85,23 @@ initSwapAirports() {
 |--------------------------------------------------------------------------
 */
 
-initTripTypeLogic() {
+initTripTypeLogic(){
 
-    const radios = document.querySelectorAll('input[name="trip_type"]');
+    const radios=document.querySelectorAll('input[name="trip_type"]')
+    const returnField=document.getElementById("returnDateField")
 
-    radios.forEach(radio => {
+    if(!radios.length || !returnField) return
 
-        radio.addEventListener("change", () => {
-
-            const returnField = document.getElementById("returnDateField");
-
-            if (!returnField) return;
-
-            returnField.style.display =
-                radio.value === "oneway" && radio.checked
-                ? "none"
-                : "block";
-
-        });
-
-    });
+    radios.forEach(radio=>{
+        radio.addEventListener("change",()=>{
+            returnField.classList.toggle(
+                "hidden",
+                radio.value==="oneway" && radio.checked
+            )
+        })
+    })
 
 },
-
 
 
 /*
@@ -113,89 +110,90 @@ initTripTypeLogic() {
 |--------------------------------------------------------------------------
 */
 
-initAirportAutocomplete() {
+initAirportAutocomplete(){
 
-    const inputs = document.querySelectorAll(".airport-input");
+    const inputs=document.querySelectorAll(".airport-input")
 
-    inputs.forEach(input => {
+    inputs.forEach(input=>{
 
-        let debounceTimer;
+        let debounceTimer
 
-        input.addEventListener("input", () => {
+        input.addEventListener("input",()=>{
 
-            clearTimeout(debounceTimer);
+            clearTimeout(debounceTimer)
 
-            debounceTimer = setTimeout(() => {
+            debounceTimer=setTimeout(()=>{
 
-                const query = input.value.trim();
+                const query=input.value.trim()
 
-                if (query.length < 2) {
-                    this.hideResults(input);
-                    return;
+                if(query.length<2){
+                    this.hideResults(input)
+                    return
                 }
 
-                this.fetchAirports(input, query);
+                this.fetchAirports(input,query)
 
-            }, 300);
+            },300)
 
-        });
+        })
 
 
-        /* keyboard navigation */
+        /*
+        |--------------------------------------------------------------------------
+        | Keyboard Navigation
+        |--------------------------------------------------------------------------
+        */
 
-        input.addEventListener("keydown", (e) => {
+        input.addEventListener("keydown",(e)=>{
 
-            const dropdown =
-                input.parentElement.querySelector(".autocomplete-results");
+            const dropdown=input.parentElement
+                .querySelector(".autocomplete-results")
 
-            if (!dropdown) return;
+            if(!dropdown) return
 
-            const items = dropdown.querySelectorAll(".airport-item");
+            const items=dropdown.querySelectorAll(".airport-item")
+            if(!items.length) return
 
-            if (!items.length) return;
+            if(e.key==="ArrowDown"){
 
-            if (e.key === "ArrowDown") {
+                e.preventDefault()
 
-                e.preventDefault();
+                this.state.selectedIndex++
 
-                this.state.selectedIndex++;
+                if(this.state.selectedIndex>=items.length)
+                    this.state.selectedIndex=0
 
-                if (this.state.selectedIndex >= items.length)
-                    this.state.selectedIndex = 0;
-
-                this.highlightItem(items);
-
-            }
-
-            if (e.key === "ArrowUp") {
-
-                e.preventDefault();
-
-                this.state.selectedIndex--;
-
-                if (this.state.selectedIndex < 0)
-                    this.state.selectedIndex = items.length - 1;
-
-                this.highlightItem(items);
+                this.highlightItem(items)
 
             }
 
-            if (e.key === "Enter") {
+            if(e.key==="ArrowUp"){
 
-                e.preventDefault();
+                e.preventDefault()
 
-                const item = items[this.state.selectedIndex];
+                this.state.selectedIndex--
 
-                if (item) item.click();
+                if(this.state.selectedIndex<0)
+                    this.state.selectedIndex=items.length-1
+
+                this.highlightItem(items)
 
             }
 
-        });
+            if(e.key==="Enter"){
 
-    });
+                e.preventDefault()
+
+                const item=items[this.state.selectedIndex]
+                if(item) item.click()
+
+            }
+
+        })
+
+    })
 
 },
-
 
 
 /*
@@ -204,103 +202,97 @@ initAirportAutocomplete() {
 |--------------------------------------------------------------------------
 */
 
-async fetchAirports(input, query) {
+async fetchAirports(input,query){
 
-    try {
+    try{
 
-        const response = await fetch(`/api/airports?q=${query}`);
+        const res=await fetch(`/api/airports?q=${encodeURIComponent(query)}`)
+        if(!res.ok) throw new Error("API error")
 
-        if (!response.ok) throw new Error("API error");
+        const airports=await res.json()
 
-        const airports = await response.json();
+        this.renderAirportResults(input,airports)
 
-        this.renderAirportResults(input, airports);
+    }catch(err){
 
-    } catch (error) {
-
-        console.error("Airport API error:", error);
+        console.error("Airport API error:",err)
 
     }
 
 },
-
 
 
 /*
 |--------------------------------------------------------------------------
-| Render Results
+| Render Airport Results
 |--------------------------------------------------------------------------
 */
 
-renderAirportResults(input, airports) {
+renderAirportResults(input,airports){
 
-    const results =
-        input.parentElement.querySelector(".autocomplete-results");
+    const results=input.parentElement
+        .querySelector(".autocomplete-results")
 
-    if (!results) return;
+    if(!results) return
 
-    results.innerHTML = "";
+    results.innerHTML=""
 
-    if (!airports.length) {
+    if(!airports.length){
 
-        results.innerHTML =
-            `<div class="airport-empty">No airports found</div>`;
+        results.innerHTML=
+        `<div class="p-3 text-sm text-gray-500">No airports found</div>`
 
-        results.style.display = "block";
-
-        return;
+        results.style.display="block"
+        return
     }
 
-    airports.forEach(airport => {
+    airports.forEach(airport=>{
 
-        const item = document.createElement("div");
+        const item=document.createElement("div")
 
-        item.className = "airport-item";
+        item.className="airport-item"
 
-        item.innerHTML = `
-            <div class="airport-icon">✈</div>
+        item.innerHTML=`
+        <div class="airport-icon">✈</div>
 
-            <div class="airport-info">
+        <div class="airport-info">
 
-                <div class="airport-city">
-                    ${airport.city}
-                    <span class="iata">(${airport.iata_code})</span>
-                </div>
-
-                <div class="airport-name">
-                    ${airport.airport_name}
-                </div>
-
+            <div class="airport-city">
+                ${airport.city}
+                <span class="iata">(${airport.iata_code})</span>
             </div>
-        `;
 
-        item.addEventListener("click", () => {
+            <div class="airport-name">
+                ${airport.airport_name}
+            </div>
 
-            input.value = airport.display_name;
+        </div>
+        `
 
-            const hidden =
-                input.parentElement.querySelector('input[type="hidden"]');
+        item.addEventListener("click",()=>{
 
-            if (hidden) hidden.value = airport.iata_code;
+            input.value=airport.display_name
 
-            results.style.display = "none";
+            const hidden=input.parentElement
+                .querySelector('input[type="hidden"]')
 
-            this.state.selectedIndex = -1;
+            if(hidden) hidden.value=airport.iata_code
 
-            this.saveRecentSearch(airport.display_name);
+            results.style.display="none"
+            this.state.selectedIndex=-1
 
-        });
+            this.saveRecentSearch(airport.display_name)
 
-        results.appendChild(item);
+        })
 
-    });
+        results.appendChild(item)
 
-    results.style.display = "block";
+    })
 
-    this.state.activeDropdown = results;
+    results.style.display="block"
+    this.state.activeDropdown=results
 
 },
-
 
 
 /*
@@ -309,22 +301,23 @@ renderAirportResults(input, airports) {
 |--------------------------------------------------------------------------
 */
 
-highlightItem(items) {
+highlightItem(items){
 
-    items.forEach(el => el.classList.remove("active"));
+    items.forEach(el=>el.classList.remove("bg-gray-100"))
 
-    const current = items[this.state.selectedIndex];
+    const current=items[this.state.selectedIndex]
 
-    if (current) {
+    if(current){
 
-        current.classList.add("active");
+        current.classList.add("bg-gray-100")
 
-        current.scrollIntoView({ block: "nearest" });
+        current.scrollIntoView({
+            block:"nearest"
+        })
 
     }
 
 },
-
 
 
 /*
@@ -333,15 +326,14 @@ highlightItem(items) {
 |--------------------------------------------------------------------------
 */
 
-hideResults(input) {
+hideResults(input){
 
-    const results =
-        input.parentElement.querySelector(".autocomplete-results");
+    const results=input.parentElement
+        .querySelector(".autocomplete-results")
 
-    if (results) results.style.display = "none";
+    if(results) results.style.display="none"
 
 },
-
 
 
 /*
@@ -350,53 +342,41 @@ hideResults(input) {
 |--------------------------------------------------------------------------
 */
 
-initPassengerSelector() {
+initPassengerSelector(){
 
-    const toggle = document.getElementById("passengerToggle");
-    const popup = document.getElementById("passengerPopup");
+    const toggle=document.getElementById("passengerToggle")
+    const popup=document.getElementById("passengerPopup")
 
-    if (!toggle || !popup) return;
+    if(!toggle || !popup) return
 
-    toggle.addEventListener("click", () => {
+    toggle.addEventListener("click",()=>{
+        popup.classList.toggle("hidden")
+    })
 
-        popup.classList.toggle("hidden");
+    document.querySelectorAll(".plus").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+            const type=btn.dataset.type
+            this.state.passengers[type]++
+            this.updatePassengerUI()
+        })
+    })
 
-    });
+    document.querySelectorAll(".minus").forEach(btn=>{
+        btn.addEventListener("click",()=>{
 
-    document.querySelectorAll(".plus").forEach(btn => {
+            const type=btn.dataset.type
 
-        btn.addEventListener("click", () => {
+            if(type==="adult" && this.state.passengers.adult===1) return
 
-            const type = btn.dataset.type;
+            if(this.state.passengers[type]>0)
+                this.state.passengers[type]--
 
-            this.state.passengers[type]++;
+            this.updatePassengerUI()
 
-            this.updatePassengerUI();
-
-        });
-
-    });
-
-    document.querySelectorAll(".minus").forEach(btn => {
-
-        btn.addEventListener("click", () => {
-
-            const type = btn.dataset.type;
-
-            if (type === "adult" &&
-                this.state.passengers.adult === 1) return;
-
-            if (this.state.passengers[type] > 0)
-                this.state.passengers[type]--;
-
-            this.updatePassengerUI();
-
-        });
-
-    });
+        })
+    })
 
 },
-
 
 
 /*
@@ -405,23 +385,27 @@ initPassengerSelector() {
 |--------------------------------------------------------------------------
 */
 
-updatePassengerUI() {
+updatePassengerUI(){
 
-    const data = this.state.passengers;
+    const p=this.state.passengers
 
-    document.getElementById("adultCount").innerText = data.adult;
-    document.getElementById("childCount").innerText = data.child;
-    document.getElementById("infantCount").innerText = data.infant;
+    const adult=document.getElementById("adultCount")
+    const child=document.getElementById("childCount")
+    const infant=document.getElementById("infantCount")
 
-    const summary =
-        `${data.adult} Adult` +
-        (data.child ? `, ${data.child} Child` : "") +
-        (data.infant ? `, ${data.infant} Infant` : "");
+    if(adult) adult.innerText=p.adult
+    if(child) child.innerText=p.child
+    if(infant) infant.innerText=p.infant
 
-    document.getElementById("passengerSummary").innerText = summary;
+    const summary=
+        `${p.adult} Adult`+
+        (p.child?` , ${p.child} Child`:"")+
+        (p.infant?` , ${p.infant} Infant`:"")
+
+    const el=document.getElementById("passengerSummary")
+    if(el) el.innerText=summary
 
 },
-
 
 
 /*
@@ -430,32 +414,24 @@ updatePassengerUI() {
 |--------------------------------------------------------------------------
 */
 
-initClickOutside() {
+initClickOutside(){
 
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click",(e)=>{
 
         document.querySelectorAll(".autocomplete-results")
-        .forEach(drop => {
+        .forEach(drop=>{
+            if(!drop.parentElement.contains(e.target))
+                drop.style.display="none"
+        })
 
-            if (!drop.parentElement.contains(e.target)) {
-                drop.style.display = "none";
-            }
+        const popup=document.getElementById("passengerPopup")
 
-        });
+        if(popup && !popup.parentElement.contains(e.target))
+            popup.classList.add("hidden")
 
-        const popup = document.getElementById("passengerPopup");
-
-        if (popup &&
-            !popup.parentElement.contains(e.target)) {
-
-            popup.classList.add("hidden");
-
-        }
-
-    });
+    })
 
 },
-
 
 
 /*
@@ -464,20 +440,20 @@ initClickOutside() {
 |--------------------------------------------------------------------------
 */
 
-saveRecentSearch(route) {
+saveRecentSearch(route){
 
-    let searches =
-        JSON.parse(localStorage.getItem("recentFlights")) || [];
+    let searches=
+        JSON.parse(localStorage.getItem("recentFlights")) || []
 
-    searches.unshift(route);
+    searches.unshift(route)
 
-    searches = [...new Set(searches)].slice(0, 5);
+    searches=[...new Set(searches)].slice(0,5)
 
     localStorage.setItem(
         "recentFlights",
         JSON.stringify(searches)
-    );
+    )
 
 }
 
-};
+}
