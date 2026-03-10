@@ -1,0 +1,450 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* =================================================
+GLOBAL RESET
+================================================= */
+
+body{
+background:#f3f4f6;
+color:#111827;
+font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+line-height:1.4;
+}
+
+/* prevent tailwind inheritance bugs */
+
+input,
+select,
+button{
+color:#111827;
+background:#ffffff;
+font-size:14px;
+}
+
+input::placeholder{
+color:#6b7280;
+opacity:1;
+}
+
+/* helper */
+
+.hidden{
+display:none !important;
+}
+
+
+
+/* =================================================
+SEARCH WRAPPER
+================================================= */
+
+.flight-search-wrapper{
+background:#ffffff;
+padding:32px;
+border-radius:22px;
+box-shadow:0 25px 60px rgba(0,0,0,.15);
+max-width:1250px;
+margin:auto;
+position:relative;
+z-index:50;
+}
+
+
+
+/* =================================================
+TABS
+================================================= */
+
+.search-tabs{
+display:flex;
+gap:12px;
+margin-bottom:22px;
+}
+
+.tab{
+display:flex;
+align-items:center;
+gap:8px;
+padding:10px 18px;
+border-radius:999px;
+background:#f3f4f6;
+font-weight:600;
+cursor:pointer;
+color:#374151;
+transition:.2s;
+}
+
+.tab:hover{
+background:#e5e7eb;
+}
+
+.tab.active{
+background:#012F6B;
+color:#ffffff;
+}
+
+
+
+/* =================================================
+TRIP TYPES
+================================================= */
+
+.trip-types{
+display:flex;
+gap:18px;
+margin-bottom:20px;
+font-size:14px;
+}
+
+.trip-types label{
+display:flex;
+align-items:center;
+gap:6px;
+cursor:pointer;
+color:#374151;
+}
+
+.trip-types input{
+accent-color:#012F6B;
+}
+
+
+
+/* =================================================
+SEARCH GRID
+================================================= */
+
+.search-grid{
+display:grid;
+grid-template-columns:2fr 60px 2fr 1.2fr 1.2fr 1.2fr 1.2fr 170px;
+gap:12px;
+align-items:end;
+}
+
+
+
+/* =================================================
+FIELDS
+================================================= */
+
+.search-field{
+position:relative;
+}
+
+.search-field label{
+font-size:12px;
+color:#6b7280;
+margin-bottom:5px;
+display:block;
+}
+
+.search-field input,
+.search-field select{
+width:100%;
+padding:12px;
+border:1px solid #d1d5db;
+border-radius:10px;
+transition:.2s;
+}
+
+.search-field input:focus,
+.search-field select:focus{
+outline:none;
+border-color:#012F6B;
+box-shadow:0 0 0 2px rgba(1,47,107,.15);
+}
+
+
+
+/* =================================================
+SWAP AIRPORT BUTTON
+================================================= */
+
+.swap-wrapper{
+display:flex;
+align-items:flex-end;
+justify-content:center;
+}
+
+.swap-airports{
+height:44px;
+width:44px;
+border-radius:50%;
+border:1px solid #d1d5db;
+background:#ffffff;
+cursor:pointer;
+font-size:18px;
+transition:.2s;
+}
+
+.swap-airports:hover{
+background:#f3f4f6;
+}
+
+
+
+/* =================================================
+SEARCH BUTTON
+================================================= */
+
+.search-submit{
+display:flex;
+align-items:flex-end;
+}
+
+.search-button{
+width:100%;
+padding:13px;
+background:#012F6B;
+color:#ffffff;
+border-radius:12px;
+font-weight:600;
+transition:.2s;
+}
+
+.search-button:hover{
+background:#254D81;
+}
+
+
+
+/* =================================================
+AUTOCOMPLETE DROPDOWN
+================================================= */
+
+.autocomplete-results{
+position:absolute;
+top:100%;
+left:0;
+width:100%;
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:12px;
+margin-top:6px;
+box-shadow:0 20px 40px rgba(0,0,0,.18);
+z-index:9999;
+max-height:320px;
+overflow-y:auto;
+display:none;
+}
+
+
+
+/* RESULT ITEM */
+
+.airport-item{
+display:flex;
+gap:12px;
+padding:12px;
+cursor:pointer;
+align-items:flex-start;
+transition:.15s;
+border-bottom:1px solid #f3f4f6;
+}
+
+.airport-item:last-child{
+border-bottom:none;
+}
+
+.airport-item:hover{
+background:#f3f4f6;
+}
+
+
+
+/* ICON */
+
+.airport-icon{
+font-size:16px;
+color:#9ca3af;
+margin-top:2px;
+}
+
+
+
+/* TEXT */
+
+.airport-info{
+display:flex;
+flex-direction:column;
+}
+
+.airport-city{
+font-size:14px;
+font-weight:600;
+color:#111827;
+}
+
+.airport-name{
+font-size:12px;
+color:#6b7280;
+}
+
+
+
+/* =================================================
+PASSENGER SELECTOR
+================================================= */
+
+.passenger-display{
+width:100%;
+border:1px solid #d1d5db;
+border-radius:10px;
+padding:12px;
+background:#ffffff;
+cursor:pointer;
+text-align:left;
+font-size:14px;
+}
+
+.passenger-display:hover{
+border-color:#012F6B;
+}
+
+
+
+/* popup */
+
+.passenger-popup{
+position:absolute;
+top:100%;
+left:0;
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:16px;
+margin-top:6px;
+box-shadow:0 20px 40px rgba(0,0,0,.15);
+width:240px;
+z-index:9999;
+}
+
+
+
+/* rows */
+
+.passenger-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+font-size:14px;
+color:#111827;
+}
+
+
+
+/* counter */
+
+.counter{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.counter span{
+font-weight:600;
+min-width:18px;
+text-align:center;
+}
+
+.counter button{
+width:28px;
+height:28px;
+border-radius:6px;
+border:1px solid #d1d5db;
+background:#ffffff;
+cursor:pointer;
+transition:.2s;
+}
+
+.counter button:hover{
+background:#f3f4f6;
+}
+
+
+
+/* =================================================
+SCROLLBAR
+================================================= */
+
+.autocomplete-results::-webkit-scrollbar{
+width:6px;
+}
+
+.autocomplete-results::-webkit-scrollbar-thumb{
+background:#d1d5db;
+border-radius:10px;
+}
+
+
+
+/* =================================================
+RESPONSIVE
+================================================= */
+
+@media (max-width:1100px){
+
+.search-grid{
+grid-template-columns:1fr 1fr;
+}
+
+.swap-wrapper{
+display:none;
+}
+
+.search-submit{
+grid-column:span 2;
+}
+
+}
+/* =================================================
+NAVBAR / MENU FIX
+Fix Tailwind responsive menu visibility
+================================================= */
+
+/* allow Tailwind responsive utilities to work */
+
+@media (min-width:768px){
+
+.md\:flex{
+display:flex !important;
+}
+
+.md\:block{
+display:block !important;
+}
+
+.md\:inline-flex{
+display:inline-flex !important;
+}
+
+}
+
+/* ensure navbar stays above search components */
+
+nav{
+position:relative;
+z-index:2000;
+}
+
+/* prevent search dropdown covering navbar */
+
+.flight-search-wrapper{
+z-index:100;
+}
+
+/* fix autocomplete appearing behind elements */
+
+.autocomplete-results{
+z-index:3000;
+}
+
+/* passenger popup fix */
+
+.passenger-popup{
+z-index:3000;
+}
