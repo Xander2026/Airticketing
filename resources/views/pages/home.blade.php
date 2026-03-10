@@ -14,7 +14,7 @@ Find Flights. <span class="text-accent">Save More.</span>
 Compare hundreds of airlines and book the best flight deals worldwide.
 </p>
 
-@include('components.flight-search')
+<x-flight-search />
 
 </div>
 </section>
